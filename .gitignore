@@ -1,2 +1,6 @@
 # vscode configuration
 .vscode
+
+.clang-format
+
+cachesim
