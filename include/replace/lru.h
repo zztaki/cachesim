@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-07 21:08:09
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-08 17:04:02
+ * @LastEditTime: 2023-03-09 15:29:17
  */
 #ifndef LRU_H
 #define LRU_H
@@ -19,6 +19,8 @@ typedef std::unordered_map<keyType, ListIteratorType> lruCacheMapType;
 
 class LRUCache : public Cache {
 protected:
+    friend class S4LRUCache;
+
     // list for recency order
     // std::list is a container, usually, implemented as a doubly-linked list
     std::list<CacheObject> cacheList_;
@@ -40,12 +42,29 @@ protected:
      */
     virtual bool evict();
 
+    /**
+     * @description: evict the specific object, be called by s4lru...
+     * @param req is the pointer to a cache requset
+     * @return true if evict successfully, else print log and return false
+     * @author: zztaki
+     */
+    virtual bool evict(const CacheRequest *req);
+
+    /**
+     * @description: evict the the tail object in cache and return, be called by
+     * s4lru...
+     * @return the evicted object
+     * @author: zztaki
+     */
+    virtual CacheRequest *evict_return();
+
 public:
     LRUCache(uint64_t capacity = 0) : Cache(capacity) {}
     virtual ~LRUCache() {}
 
     /**
-     * @description: check if the requested object is in cache
+     * @description: check if the requested object is in cache, and will do
+     * promotion when the request is a hit
      * @param req is the pointer to a cache requset
      * @return true if the requested object is in cache, else return false
      * @author: zztaki

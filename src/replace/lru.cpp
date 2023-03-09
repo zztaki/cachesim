@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-07 22:36:58
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-08 16:36:48
+ * @LastEditTime: 2023-03-09 15:42:19
  */
 #include "replace/lru.h"
 #include "cache_object.h"
@@ -39,7 +39,7 @@ bool LRUCache::insert(const CacheRequest *req) {
 }
 
 bool LRUCache::evict() {
-    if (isFull()) {
+    while (isFull()) {
         ListIteratorType victim_iterator = cacheList_.end();
         victim_iterator--;
         currentSize_ -= victim_iterator->size_;
@@ -48,4 +48,31 @@ bool LRUCache::evict() {
         return true;
     }
     return false;
+}
+
+bool LRUCache::evict(const CacheRequest *req) {
+    if (lookup(req)) {
+        // when lookup return true, the object have been moved to the head of
+        // LRU list
+        ListIteratorType victim_iterator = cacheList_.begin();
+        currentSize_ -= victim_iterator->size_;
+        cacheMap_.erase(victim_iterator->key_);
+        cacheList_.erase(victim_iterator);
+        return true;
+    }
+    return false;
+}
+
+CacheRequest *LRUCache::evict_return() {
+    if (!cacheList_.empty()) {
+        ListIteratorType victim_iterator = cacheList_.end();
+        victim_iterator--;
+        CacheObject obj = *victim_iterator;
+        CacheRequest *req = new CacheRequest(obj.key_, obj.size_);
+        currentSize_ -= victim_iterator->size_;
+        cacheMap_.erase(victim_iterator->key_);
+        cacheList_.erase(victim_iterator);
+        return req;
+    }
+    return nullptr;
 }

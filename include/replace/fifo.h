@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-08 16:18:21
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-08 16:30:33
+ * @LastEditTime: 2023-03-09 14:13:50
  */
 #ifndef FIFO_H
 #define FIFO_H
@@ -51,4 +51,6 @@ public:
      */
     virtual bool insert(const CacheRequest *req);
 };
+
+static Factory<FIFOCache> factoryFIFO("FIFO");
 #endif
