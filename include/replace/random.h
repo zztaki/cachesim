@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-08 17:07:35
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-09 14:22:49
+ * @LastEditTime: 2023-03-12 22:58:20
  */
 #ifndef RANDOM_H
 #define RANDOM_H
@@ -16,7 +16,9 @@
 #include <vector>
 class RandomCache : public Cache {
 protected:
+    // vector for stroing cache objects
     std::vector<CacheObject> cacheVec_;
+    // maybe just a unordered_set
     std::unordered_map<keyType, bool> cacheMap_;
 
     /**

@@ -4,10 +4,19 @@
  * @Autor: zztaki
  * @Date: 2023-03-08 17:03:04
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-09 16:19:23
+ * @LastEditTime: 2023-03-09 21:44:22
  */
 #include "replace/s4lru.h"
 #include "cache_request.h"
+#include <cstdint>
+
+uint64_t S4LRUCache::getCurrentSize() const {
+    uint64_t size = 0;
+    for (int i = 0; i < 4; i++) {
+        size += segments_[i].getCurrentSize();
+    }
+    return size;
+}
 
 bool S4LRUCache::lookup(const CacheRequest *req) {
     if (segments_[0].lookup(req)) {

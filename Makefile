@@ -21,6 +21,10 @@ OBJS = \
 	$(ODIR)/$(RDIR)/fifo.o \
 	$(ODIR)/$(RDIR)/random.o \
 	$(ODIR)/$(RDIR)/s4lru.o \
+	$(ODIR)/$(RDIR)/arc.o \
+	$(ODIR)/$(RDIR)/lirs.o \
+	$(ODIR)/$(RDIR)/dlirs.o \
+	$(ODIR)/$(RDIR)/min.o \
 	$(ODIR)/cachesim.o \
 
 LIBS += -lm

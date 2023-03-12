@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-09 17:20:52
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-12 16:05:36
+ * @LastEditTime: 2023-03-12 22:55:26
  */
 #ifndef DLIRS_H
 #define DLIRS_H
@@ -14,25 +14,26 @@
 #include <unordered_map>
 class DLIRSCache : public Cache {
 protected:
+    // lirsStack_ stores lir objects and index of objects that may be lir
+    // hirQueue_ stores resident hir objects
     LRUCache lirsStack_, hirQueue_;
     enum stateType {
         LIR = 0,
         RESHIR,
         NONRESHIR,
     };
+    // map object's key to its state
     std::unordered_map<keyType, stateType> objMap_;
 
     /**
-     * @description: determine which object to be evicted from the cache (be
-     * implemented by cache replacement policy)
-     * @param req is the pointer to a cache requset
+     * @description: make sure that lirsStack_ and hirQueue_ is not full
      * @return true if evict successfully, else print log and return false
      * @author: zztaki
      */
     virtual bool evict();
 
     /**
-     * @description: lirs cut, keep the bottom object is
+     * @description: lirsStack_ cut, keep the bottom object is lir object
      * @return {*}
      * @author: zztaki
      */
@@ -70,7 +71,7 @@ public:
     }
 
     /**
-     * @description: Check if the requested object is in cache
+     * @description: Check if the requested object is in cache, the specific implementation is complex...
      * @param req is the pointer to a cache requset
      * @return true if the requested object is in cache, else return false
      * @author: zztaki
@@ -78,8 +79,7 @@ public:
     virtual bool lookup(const CacheRequest *req);
 
     /**
-     * @description: determine where the requested object is inserted into
-     * the cache (be implemented by cache replacement policy)
+     * @description: insert the requested object into dlirs cache, the specific implementation is complex...
      * @param req is the pointer to a cache requset
      * @return true if insert successfully, else print log and return false
      * @author: zztaki

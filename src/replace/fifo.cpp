@@ -10,9 +10,7 @@
 #include "cache_object.h"
 #include "cache_request.h"
 
-bool FIFOCache::lookup(const CacheRequest *req) {
-    return cacheMap_.find(req->getKey()) != cacheMap_.end();
-}
+bool FIFOCache::lookup(const CacheRequest *req) { return cacheMap_.find(req->getKey()) != cacheMap_.end(); }
 
 bool FIFOCache::insert(const CacheRequest *req) {
     if (!lookup(req)) {
@@ -34,7 +32,6 @@ bool FIFOCache::evict() {
         currentSize_ -= victimObj.size_;
         cacheMap_.erase(victimObj.key_);
         cacheQueue_.pop();
-        return true;
     }
-    return false;
+    return true;
 }

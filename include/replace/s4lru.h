@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-08 16:41:47
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-09 16:19:42
+ * @LastEditTime: 2023-03-12 22:45:20
  */
 #ifndef S4LRU_H
 #define S4LRU_H
@@ -18,7 +18,7 @@ protected:
     uint64_t segmentSize_;
 
     /**
-     * @description:
+     * @description: insert the requested object into the idx segment
      * @param {CacheRequest*} req
      * @param {uint8_t} idx
      * @return {*}
@@ -31,17 +31,23 @@ protected:
      * @return {*}
      * @author: zztaki
      */
-    virtual bool evict() { return segments_[3].evict(); }
+    virtual bool evict() { return true; }
 
 public:
-    S4LRUCache(uint64_t capacity = 0)
-        : Cache(capacity), segmentSize_(capacity / 4) {
+    S4LRUCache(uint64_t capacity = 0) : Cache(capacity), segmentSize_(capacity / 4) {
         segments_[0] = LRUCache(segmentSize_);
         segments_[1] = LRUCache(segmentSize_);
         segments_[2] = LRUCache(segmentSize_);
         segments_[3] = LRUCache(segmentSize_);
     }
     ~S4LRUCache() {}
+
+    /**
+     * @description: get the total size of all objects in cache
+     * @return the total size of all objs in cache
+     * @author: zztaki
+     */
+    virtual uint64_t getCurrentSize() const;
 
     /**
      * @description: check if the requested object is in cache

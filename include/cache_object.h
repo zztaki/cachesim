@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-07 22:20:19
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-08 16:38:48
+ * @LastEditTime: 2023-03-12 15:08:46
  */
 #ifndef CACHE_OBJECT_H
 #define CACHE_OBJECT_H
@@ -15,13 +15,13 @@
 struct CacheObject {
     keyType key_;
     uint64_t size_;
+    bool flag_;
 
-    CacheObject(const CacheRequest *req)
-        : key_(req->getKey()), size_(req->getSize()) {}
+    CacheObject(const CacheRequest *req) : key_(req->getKey()), size_(req->getSize()), flag_(false) {}
 
     // comparison is based on all three properties
     bool operator==(const CacheObject &rhs) const {
-        return (rhs.key_ == key_) && (rhs.size_ == size_);
+        return (rhs.key_ == key_) && (rhs.size_ == size_) && (rhs.flag_ == flag_);
     }
 };
 #endif

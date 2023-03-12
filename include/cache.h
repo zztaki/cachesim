@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-07 19:33:44
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-08 16:22:09
+ * @LastEditTime: 2023-03-12 17:31:12
  */
 #ifndef CACHE_H
 #define CACHE_H
@@ -56,8 +56,7 @@ public:
     static void registerType(std::string name, CacheFactory *factory) {
         get_factory_instance()[name] = factory;
     }
-    static std::unique_ptr<Cache> create_unique(std::string name,
-                                                uint64_t capacity) {
+    static std::unique_ptr<Cache> create_unique(std::string name, uint64_t capacity) {
         std::unique_ptr<Cache> Cache_instance;
         if (get_factory_instance().find(name) == get_factory_instance().end()) {
             std::cerr << "unkown cacheType" << std::endl;
@@ -72,14 +71,14 @@ public:
      * @return cache's capacity
      * @author: zztaki
      */
-    uint64_t getCapacity() const { return capacity_; }
+    virtual uint64_t getCapacity() const { return capacity_; }
 
     /**
      * @description: get the total size of all objs in cache
      * @return the total size of all objs in cache
      * @author: zztaki
      */
-    uint64_t getCurrentSize() const { return currentSize_; }
+    virtual uint64_t getCurrentSize() const { return currentSize_; }
 
     /**
      * @description: Check if the requested object is in cache

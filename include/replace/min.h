@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-09 17:21:05
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-12 22:16:47
+ * @LastEditTime: 2023-03-12 22:56:13
  */
 #ifndef MIN_H
 #define MIN_H
@@ -34,8 +34,7 @@ public:
     virtual ~MINCache() {}
 
     /**
-     * @description: check if the requested object is in cache, and will do
-     * promotion when the request is a hit
+     * @description: check if the requested object is in cache
      * @param req is the pointer to a cache requset
      * @return true if the requested object is in cache, else return false
      * @author: zztaki
@@ -43,8 +42,7 @@ public:
     virtual bool lookup(const CacheRequest *req);
 
     /**
-     * @description: lru insertion policy, insert the requested object into the
-     * head of LRU list
+     * @description: insert the requested object intos cache
      * @param req is the pointer to a cache requset
      * @return true if insert successfully, else print log and return false
      * @author: zztaki

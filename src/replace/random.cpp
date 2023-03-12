@@ -4,9 +4,7 @@
 #include <algorithm>
 #include <cstdlib>
 
-bool RandomCache::lookup(const CacheRequest *req) {
-    return cacheMap_.find(req->getKey()) != cacheMap_.end();
-}
+bool RandomCache::lookup(const CacheRequest *req) { return cacheMap_.find(req->getKey()) != cacheMap_.end(); }
 
 bool RandomCache::insert(const CacheRequest *req) {
     if (!lookup(req)) {
@@ -30,7 +28,6 @@ bool RandomCache::evict() {
         currentSize_ -= victimObj.size_;
         cacheMap_.erase(victimObj.key_);
         cacheVec_.pop_back();
-        return true;
     }
-    return false;
+    return true;
 }

@@ -4,7 +4,7 @@
  * @Autor: zztaki
  * @Date: 2023-03-07 22:36:58
  * @LastEditors: zztaki
- * @LastEditTime: 2023-03-09 15:42:19
+ * @LastEditTime: 2023-03-12 17:47:56
  */
 #include "replace/lru.h"
 #include "cache_object.h"
@@ -23,6 +23,17 @@ void LRUCache::promote(lruCacheMapType::const_iterator it) {
     cacheList_.splice(cacheList_.begin(), cacheList_, it->second);
 }
 
+bool LRUCache::insert_index(const CacheRequest *req) {
+    // req.key not in cache, do insertion
+    if (!lookup(req)) {
+        CacheObject obj(req);
+        cacheList_.push_front(obj);
+        cacheMap_[obj.key_] = cacheList_.begin();
+        return true;
+    }
+    return false;
+}
+
 bool LRUCache::insert(const CacheRequest *req) {
     // req.key not in cache, do insertion
     if (!lookup(req)) {
@@ -38,6 +49,18 @@ bool LRUCache::insert(const CacheRequest *req) {
     return false;
 }
 
+bool LRUCache::insert_not_evict(const CacheRequest *req) {
+    // req.key not in cache, do insertion
+    if (!lookup(req)) {
+        CacheObject obj(req);
+        cacheList_.push_front(obj);
+        cacheMap_[obj.key_] = cacheList_.begin();
+        currentSize_ += obj.size_;
+        return true;
+    }
+    return false;
+}
+
 bool LRUCache::evict() {
     while (isFull()) {
         ListIteratorType victim_iterator = cacheList_.end();
@@ -45,9 +68,8 @@ bool LRUCache::evict() {
         currentSize_ -= victim_iterator->size_;
         cacheMap_.erase(victim_iterator->key_);
         cacheList_.erase(victim_iterator);
-        return true;
     }
-    return false;
+    return true;
 }
 
 bool LRUCache::evict(const CacheRequest *req) {
@@ -67,12 +89,30 @@ CacheRequest *LRUCache::evict_return() {
     if (!cacheList_.empty()) {
         ListIteratorType victim_iterator = cacheList_.end();
         victim_iterator--;
-        CacheObject obj = *victim_iterator;
-        CacheRequest *req = new CacheRequest(obj.key_, obj.size_);
+        CacheRequest *req = new CacheRequest(victim_iterator->key_, victim_iterator->size_);
         currentSize_ -= victim_iterator->size_;
         cacheMap_.erase(victim_iterator->key_);
         cacheList_.erase(victim_iterator);
         return req;
     }
     return nullptr;
+}
+
+void LRUCache::evict_index() {
+    ListIteratorType victim_iterator = cacheList_.end();
+    victim_iterator--;
+    cacheMap_.erase(victim_iterator->key_);
+    cacheList_.erase(victim_iterator);
+}
+
+bool LRUCache::evict_index(const CacheRequest *req) {
+    if (lookup(req)) {
+        // when lookup return true, the object have been moved to the head of
+        // LRU list
+        ListIteratorType victim_iterator = cacheList_.begin();
+        cacheMap_.erase(victim_iterator->key_);
+        cacheList_.erase(victim_iterator);
+        return true;
+    }
+    return false;
 }
